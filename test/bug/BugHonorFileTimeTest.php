@@ -19,7 +19,7 @@ use function fopen;
  */
 class BugHonorFileTimeTest extends TestCase
 {
-    public function testHonorsFileTime(): void
+    public function testHonorsFileTime()
     {
         $archiveOpt = new Archive();
         $fileOpt = new File();

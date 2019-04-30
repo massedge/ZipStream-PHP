@@ -168,7 +168,7 @@ class ZipStream
      * allow software to send its own headers (including the filename), and
      * still use this library.
      */
-    public function __construct(?string $name = null, ?ArchiveOptions $opt = null)
+    public function __construct(string $name = null, ArchiveOptions $opt = null)
     {
         $this->opt = $opt ?: new ArchiveOptions();
 
@@ -207,7 +207,7 @@ class ZipStream
      *   $opt->setComment = 'this is a comment about bar.jpg';
      *   $zip->addFile('bar.jpg', $data, $opt);
      */
-    public function addFile(string $name, string $data, ?FileOptions $options = null): void
+    public function addFile(string $name, string $data, FileOptions $options = null)
     {
         $options = $options ?: new FileOptions();
         $options->defaultTo($this->opt);
@@ -253,7 +253,7 @@ class ZipStream
      * @throws \ZipStream\Exception\FileNotFoundException
      * @throws \ZipStream\Exception\FileNotReadableException
      */
-    public function addFileFromPath(string $name, string $path, ?FileOptions $options = null): void
+    public function addFileFromPath(string $name, string $path, FileOptions $options = null)
     {
         $options = $options ?: new FileOptions();
         $options->defaultTo($this->opt);
@@ -287,7 +287,7 @@ class ZipStream
      *
      * @return void
      */
-    public function addFileFromStream(string $name, $stream, ?FileOptions $options = null): void
+    public function addFileFromStream(string $name, $stream, FileOptions $options = null)
     {
         $options = $options ?: new FileOptions();
         $options->defaultTo($this->opt);
@@ -324,8 +324,8 @@ class ZipStream
     public function addFileFromPsr7Stream(
         string $name,
         StreamInterface $stream,
-        ?FileOptions $options = null
-    ): void {
+        FileOptions $options = null
+    ) {
         $options = $options ?: new FileOptions();
         $options->defaultTo($this->opt);
 
@@ -351,7 +351,7 @@ class ZipStream
      *
      * @throws OverflowException
      */
-    public function finish(): void
+    public function finish()
     {
         // add trailing cdr file records
         foreach ($this->files as $cdrFile) {
@@ -383,7 +383,7 @@ class ZipStream
      *
      * @return void
      */
-    protected function addCdr64Eof(): void
+    protected function addCdr64Eof()
     {
         $num_files = count($this->files);
         $cdr_length = $this->cdr_ofs;
@@ -419,7 +419,7 @@ class ZipStream
         $args = [];
 
         // populate format string and argument list
-        foreach ($fields as [$format, $value]) {
+        foreach ($fields as list($format, $value)) {
             if ($format === 'P') {
                 $fmt .= 'VV';
                 if ($value instanceof Bigint) {
@@ -451,7 +451,7 @@ class ZipStream
      * @param String $str
      * @return void
      */
-    public function send(string $str): void
+    public function send(string $str)
     {
         if ($this->need_headers) {
             $this->sendHttpHeaders();
@@ -466,7 +466,7 @@ class ZipStream
      *
      * @return void
      */
-    protected function sendHttpHeaders(): void
+    protected function sendHttpHeaders()
     {
         // grab content disposition
         $disposition = $this->opt->getContentDisposition();
@@ -499,7 +499,7 @@ class ZipStream
      *
      * @return void
      */
-    protected function addCdr64Locator(): void
+    protected function addCdr64Locator()
     {
         $cdr_offset = $this->ofs->add($this->cdr_ofs);
 
@@ -519,7 +519,7 @@ class ZipStream
      *
      * @return void
      */
-    protected function addCdrEof(): void
+    protected function addCdrEof()
     {
         $num_files = count($this->files);
         $cdr_length = $this->cdr_ofs;
@@ -549,7 +549,7 @@ class ZipStream
      *
      * @return void
      */
-    protected function clear(): void
+    protected function clear()
     {
         $this->files = [];
         $this->ofs = new Bigint();
@@ -578,7 +578,7 @@ class ZipStream
      * @param File $file
      * @return void
      */
-    public function addToCdr(File $file): void
+    public function addToCdr(File $file)
     {
         $file->ofs = $this->ofs;
         $this->ofs = $this->ofs->add($file->getTotalLength());

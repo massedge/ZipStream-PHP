@@ -9,7 +9,7 @@ use ZipStream\Bigint;
 
 class BigintTest extends TestCase
 {
-    public function testConstruct(): void
+    public function testConstruct()
     {
         $bigint = new Bigint(0x12345678);
         $this->assertSame('0x0000000012345678', $bigint->getHex64());
@@ -17,7 +17,7 @@ class BigintTest extends TestCase
         $this->assertSame(0, $bigint->getHigh32());
     }
 
-    public function testConstructLarge(): void
+    public function testConstructLarge()
     {
         $bigint = new Bigint(0x87654321);
         $this->assertSame('0x0000000087654321', $bigint->getHex64());
@@ -25,7 +25,7 @@ class BigintTest extends TestCase
         $this->assertSame(0, $bigint->getHigh32());
     }
 
-    public function testAddSmallValue(): void
+    public function testAddSmallValue()
     {
         $bigint = new Bigint(1);
         $bigint = $bigint->add(Bigint::init(2));
@@ -36,14 +36,14 @@ class BigintTest extends TestCase
         $this->assertSame($bigint->getLowFF(true), 0xFFFFFFFF);
     }
 
-    public function testAddWithOverflowAtLowestByte(): void
+    public function testAddWithOverflowAtLowestByte()
     {
         $bigint = new Bigint(0xFF);
         $bigint = $bigint->add(Bigint::init(0x01));
         $this->assertSame(0x100, $bigint->getLow32());
     }
 
-    public function testAddWithOverflowAtInteger32(): void
+    public function testAddWithOverflowAtInteger32()
     {
         $bigint = new Bigint(0xFFFFFFFE);
         $this->assertFalse($bigint->isOver32());
@@ -55,7 +55,7 @@ class BigintTest extends TestCase
         $this->assertSame(0xFFFFFFFF, $bigint->getLowFF());
     }
 
-    public function testAddWithOverflowAtInteger64(): void
+    public function testAddWithOverflowAtInteger64()
     {
         $bigint = Bigint::fromLowHigh(0xFFFFFFFF, 0xFFFFFFFF);
         $this->assertSame('0xFFFFFFFFFFFFFFFF', $bigint->getHex64());

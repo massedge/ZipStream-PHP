@@ -28,7 +28,7 @@ final class File
      */
     private $size = 0;
 
-    public function defaultTo(Archive $archiveOptions): void
+    public function defaultTo(Archive $archiveOptions)
     {
         $this->deflateLevel = $this->deflateLevel ?: $archiveOptions->getDeflateLevel();
         $this->time = $this->time ?: new DateTime();
@@ -45,7 +45,7 @@ final class File
     /**
      * @param string $comment
      */
-    public function setComment(string $comment): void
+    public function setComment(string $comment)
     {
         $this->comment = $comment;
     }
@@ -61,7 +61,7 @@ final class File
     /**
      * @param Method $method
      */
-    public function setMethod(Method $method): void
+    public function setMethod(Method $method)
     {
         $this->method = $method;
     }
@@ -77,7 +77,7 @@ final class File
     /**
      * @param int $deflateLevel
      */
-    public function setDeflateLevel(int $deflateLevel): void
+    public function setDeflateLevel(int $deflateLevel)
     {
         $this->deflateLevel = $deflateLevel;
     }
@@ -93,7 +93,7 @@ final class File
     /**
      * @param DateTime $time
      */
-    public function setTime(DateTime $time): void
+    public function setTime(DateTime $time)
     {
         $this->time = $time;
     }
@@ -109,7 +109,7 @@ final class File
     /**
      * @param int $size
      */
-    public function setSize(int $size): void
+    public function setSize(int $size)
     {
         $this->size = $size;
     }

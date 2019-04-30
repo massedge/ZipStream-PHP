@@ -20,9 +20,9 @@ class ZipStreamTest extends TestCase
     const OSX_ARCHIVE_UTILITY =
         '/System/Library/CoreServices/Applications/Archive Utility.app/Contents/MacOS/Archive Utility';
 
-    public function testFileNotFoundException(): void
+    public function testFileNotFoundException()
     {
-        $this->expectException(\ZipStream\Exception\FileNotFoundException::class);
+        $this->setExpectedException(\ZipStream\Exception\FileNotFoundException::class);
         // Get ZipStream Object
         $zip = new ZipStream();
 
@@ -30,18 +30,18 @@ class ZipStreamTest extends TestCase
         $zip->addFileFromPath('foobar.php', '/foo/bar/foobar.php');
     }
 
-    public function testFileNotReadableException(): void
+    public function testFileNotReadableException()
     {
         // create new virtual filesystem
         $root = vfsStream::setup('vfs');
         // create a virtual file with no permissions
         $file = vfsStream::newFile('foo.txt', 0000)->at($root)->setContent('bar');
         $zip = new ZipStream();
-        $this->expectException(\ZipStream\Exception\FileNotReadableException::class);
+        $this->setExpectedException(\ZipStream\Exception\FileNotReadableException::class);
         $zip->addFileFromPath('foo.txt', $file->url());
     }
 
-    public function testDostime(): void
+    public function testDostime()
     {
         // Allows testing of protected method
         $class = new \ReflectionClass(File::class);
@@ -57,9 +57,9 @@ class ZipStreamTest extends TestCase
         $this->assertSame($method->invoke(null, 0), 2162688);
     }
 
-    public function testAddFile(): void
+    public function testAddFile()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -150,9 +150,9 @@ class ZipStreamTest extends TestCase
         return $data;
     }
 
-    public function testAddFileUtf8NameComment(): void
+    public function testAddFileUtf8NameComment()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -184,9 +184,9 @@ class ZipStreamTest extends TestCase
         $this->assertEquals($comment, $zipArch->getCommentName($name));
     }
 
-    public function testAddFileUtf8NameNonUtfComment(): void
+    public function testAddFileUtf8NameNonUtfComment()
     {
-        $this->expectException(\ZipStream\Exception\EncodingException::class);
+        $this->setExpectedException(\ZipStream\Exception\EncodingException::class);
 
         $stream = $this->getTmpFileStream()[1];
 
@@ -205,9 +205,9 @@ class ZipStreamTest extends TestCase
         $zip->addFile($name, $content, $fileOptions);
     }
 
-    public function testAddFileNonUtf8NameUtfComment(): void
+    public function testAddFileNonUtf8NameUtfComment()
     {
-        $this->expectException(\ZipStream\Exception\EncodingException::class);
+        $this->setExpectedException(\ZipStream\Exception\EncodingException::class);
 
         $stream = $this->getTmpFileStream()[1];
 
@@ -226,9 +226,9 @@ class ZipStreamTest extends TestCase
         $zip->addFile(mb_convert_encoding($name, 'ISO-8859-2', 'UTF-8'), $content, $fileOptions);
     }
 
-    public function testAddFileWithStorageMethod(): void
+    public function testAddFileWithStorageMethod()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -254,13 +254,13 @@ class ZipStreamTest extends TestCase
         $zipArch->close();
     }
 
-    public function testDecompressFileWithMacUnarchiver(): void
+    public function testDecompressFileWithMacUnarchiver()
     {
         if (!file_exists(self::OSX_ARCHIVE_UTILITY)) {
             $this->markTestSkipped('The Mac OSX Archive Utility is not available.');
         }
 
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -282,21 +282,21 @@ class ZipStreamTest extends TestCase
         $this->assertStringEqualsFile(dirname($tmp) . '/' . $folder . '/sample.txt', 'Sample Data');
     }
 
-    public function testAddFileFromPath(): void
+    public function testAddFileFromPath()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
 
         $zip = new ZipStream(null, $options);
 
-        [$tmpExample, $streamExample] = $this->getTmpFileStream();
+        list($tmpExample, $streamExample) = $this->getTmpFileStream();
         fwrite($streamExample, 'Sample String Data');
         fclose($streamExample);
         $zip->addFileFromPath('sample.txt', $tmpExample);
 
-        [$tmpExample, $streamExample] = $this->getTmpFileStream();
+        list($tmpExample, $streamExample) = $this->getTmpFileStream();
         fwrite($streamExample, 'More Simple Sample Data');
         fclose($streamExample);
         $zip->addFileFromPath('test/sample.txt', $tmpExample);
@@ -313,9 +313,9 @@ class ZipStreamTest extends TestCase
         $this->assertStringEqualsFile($tmpDir . '/test/sample.txt', 'More Simple Sample Data');
     }
 
-    public function testAddFileFromPathWithStorageMethod(): void
+    public function testAddFileFromPathWithStorageMethod()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -325,12 +325,12 @@ class ZipStreamTest extends TestCase
         $fileOptions = new FileOptions();
         $fileOptions->setMethod(Method::STORE());
 
-        [$tmpExample, $streamExample] = $this->getTmpFileStream();
+        list($tmpExample, $streamExample) = $this->getTmpFileStream();
         fwrite($streamExample, 'Sample String Data');
         fclose($streamExample);
         $zip->addFileFromPath('sample.txt', $tmpExample, $fileOptions);
 
-        [$tmpExample, $streamExample] = $this->getTmpFileStream();
+        list($tmpExample, $streamExample) = $this->getTmpFileStream();
         fwrite($streamExample, 'More Simple Sample Data');
         fclose($streamExample);
         $zip->addFileFromPath('test/sample.txt', $tmpExample);
@@ -350,7 +350,7 @@ class ZipStreamTest extends TestCase
         $zipArch->close();
     }
 
-    public function testAddLargeFileFromPath(): void
+    public function testAddLargeFileFromPath()
     {
         $methods = [Method::DEFLATE(), Method::STORE()];
         $falseTrue = [false, true];
@@ -366,9 +366,9 @@ class ZipStreamTest extends TestCase
         }
     }
 
-    protected function addLargeFileFileFromPath($method, $zeroHeader, $zip64): void
+    protected function addLargeFileFileFromPath($method, $zeroHeader, $zip64)
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -379,7 +379,7 @@ class ZipStreamTest extends TestCase
 
         $zip = new ZipStream(null, $options);
 
-        [$tmpExample, $streamExample] = $this->getTmpFileStream();
+        list($tmpExample, $streamExample) = $this->getTmpFileStream();
         for ($i = 0; $i <= 10000; $i++) {
             fwrite($streamExample, sha1((string)$i));
             if ($i % 100 === 0) {
@@ -402,9 +402,9 @@ class ZipStreamTest extends TestCase
         $this->assertEquals(sha1_file($tmpDir . '/sample.txt'), $shaExample, "SHA-1 Mismatch Method: {$method}");
     }
 
-    public function testAddFileFromStream(): void
+    public function testAddFileFromStream()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -439,9 +439,9 @@ class ZipStreamTest extends TestCase
         $this->assertStringEqualsFile($tmpDir . '/test/sample.txt', 'More Simple Sample Data');
     }
 
-    public function testAddFileFromStreamWithStorageMethod(): void
+    public function testAddFileFromStreamWithStorageMethod()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -478,9 +478,9 @@ class ZipStreamTest extends TestCase
         $zipArch->close();
     }
 
-    public function testAddFileFromPsr7Stream(): void
+    public function testAddFileFromPsr7Stream()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);
@@ -504,9 +504,9 @@ class ZipStreamTest extends TestCase
         $this->assertStringEqualsFile($tmpDir . '/sample.json', $body);
     }
 
-    public function testAddFileFromPsr7StreamWithFileSizeSet(): void
+    public function testAddFileFromPsr7StreamWithFileSizeSet()
     {
-        [$tmp, $stream] = $this->getTmpFileStream();
+        list($tmp, $stream) = $this->getTmpFileStream();
 
         $options = new ArchiveOptions();
         $options->setOutputStream($stream);

@@ -17,7 +17,7 @@ class DeflateStream extends Stream
      *
      * @return void
      */
-    public function rewind(): void
+    public function rewind()
     {
         // deflate filter needs to be removed before rewind
         if ($this->filter) {
@@ -34,7 +34,7 @@ class DeflateStream extends Stream
      *
      * @return void
      */
-    public function removeDeflateFilter(): void
+    public function removeDeflateFilter()
     {
         if (!$this->filter) {
             return;
@@ -49,7 +49,7 @@ class DeflateStream extends Stream
      * @param Option\File $options
      * @return void
      */
-    public function addDeflateFilter(Option\File $options): void
+    public function addDeflateFilter(Option\File $options)
     {
         $this->options = $options;
         // parameter 4 for stream_filter_append expects array

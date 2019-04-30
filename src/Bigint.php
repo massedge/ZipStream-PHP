@@ -30,7 +30,7 @@ class Bigint
      * @param int $count
      * @return void
      */
-    protected function fillBytes(int $value, int $start, int $count): void
+    protected function fillBytes(int $value, int $start, int $count)
     {
         for ($i = 0; $i < $count; $i++) {
             $this->bytes[$start + $i] = $i >= PHP_INT_SIZE ? 0 : $value & 0xFF;
