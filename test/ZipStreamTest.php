@@ -562,7 +562,7 @@ class ZipStreamTest extends TestCase
     {
         // WORKAROUND (1/2): remove phpunit's output buffer in order to run test without any buffering
         ob_end_flush();
-        $this->assertEquals(0, \ob_get_level());
+        $this->assertEquals(0, ob_get_level());
 
         [$tmp, $stream] = $this->getTmpFileStream();
 
